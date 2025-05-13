@@ -54,6 +54,14 @@ class linear_iterator:
 
 subscripts = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉']
 
+type_scores = {
+   # (hider score, seeker score)
+   # (incase hider is not found, incase hider is found)
+   PLACETYPE.HARD:    (1, 2),
+   PLACETYPE.NEUTRAL: (1, 1),
+   PLACETYPE.EASY:    (2, 1)
+}
+
 def sub(number) -> str:
    sub = ""
    while number != 0:

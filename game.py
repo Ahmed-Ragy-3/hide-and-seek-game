@@ -19,12 +19,6 @@ class Game():
 
       self.__initialize()
 
-   def start_game(self):
-      print("Welcome to the game!")
-      # self.initialize_game()
-      while not self.game_over:
-         self.play_round()
-
    def __initialize(self):
       # world will be a 2D matrix of size M x N
       self.world = [[random.choice(list(u.PLACETYPE)) for _ in range(self.N)] for _ in range(self.M)]
@@ -33,23 +27,40 @@ class Game():
       self.payoff_matrix = np.zeros((total_size, total_size)) 
       for h in range(total_size):
          for s in range(total_size):
-            place_type = self.world[s]  # The seeker determines the column
-            hider_score = self.type_scores[place_type][0]
-            if h == s:
-               self.payoff_matrix[h][s] = hider_score  # Exact match
-            else:
-               self.payoff_matrix[h][s] = self.__proximity_score(h, s, hider_score)
+            rh, ch = self.__indices(h)
+            rs, cs = self.__indices(s)
+            
+            place_type = self.world[rh][ch]                 # The hardness of the place where the seeker is
+            hider_score = u.type_scores[place_type][0]      # score of the hider when he is not found
+            seeker_score = u.type_scores[place_type][1]     # score of the seeker when he finds hider
+            
+            self.payoff_matrix[h][s] = hider_score if h != s else -seeker_score
+            # to prevent floats
+            self.payoff_matrix[h][s] *= 4
+            
+            # proximity_score
+            dis = abs(rs - rh) + abs(cs - ch)
+            if dis == 1:
+               self.payoff_matrix[h][s] *= 0.5
+            
+            elif dis == 2:
+               self.payoff_matrix[h][s] *= 0.75
+            
+   def __distance(self, index1: int, index2: int) -> int:
+      """
+      Args:
+         index1 (int): index of the hider in payoff matrix
+         index2 (int): index of the seeker in payoff matrix
+      Returns:
+         int: distance between hider an seeker in the 2D world
+      """
+      # assert index1 != index2, "indices shouldn't be equal"
+      rh, ch = self.__indices(index1)
+      rs, cs = self.__indices(index2)
 
-   def __proximity_score(self, h, s, score):
-      # Adjust score based on distance between hider and seeker
-      distance = abs(h - s)
-      if distance == 1:
-         return score * 0.5
-      
-      elif distance == 2:
-         return score * 0.75
-      
-      return score
+      return abs(rs - rh) + abs(cs - ch)
+      # return max(diff_r, diff_c)
+
 
    def play_round(self):
       # Handle player actions and game logic
@@ -72,33 +83,34 @@ class Game():
       self.__initialize()
 
    def other(self, turn) -> u.PLAYER:
-      assert turn in (u.HIDER, u.SEEKER), "Invalid player type"
-      return u.HIDER if turn == u.SEEKER else u.SEEKER
+      assert turn in (u.PLAYER.HIDER, u.PLAYER.SEEKER), "Invalid player type"
+      return u.PLAYER.HIDER if turn == u.PLAYER.SEEKER else u.PLAYER.SEEKER
 
-   def __rand_indices__(self) -> tuple:
+   def __rand_indices(self) -> tuple:
       return random.randint(0, self.M - 1), random.randint(0, self.N - 1)
    
    def get_matrix(self) -> np.ndarray:
       return self.payoff_matrix
 
-   def indices(self, index: int) -> tuple:
+   def __indices(self, index: int) -> tuple:
       assert 0 <= index < (self.M * self.N), "Index out of bounds"
       return index // self.N, index % self.N
+
 
    def __str__(self) -> str:
       ret = f"Game Mode: {self.mode.value}\n"
       ret += f"Human Role: {self.human_role.value}\n"
       
       ret += f"\nWorld: {self.M} x {self.N}\n"
-      sep = "-" * 50 + "\n"
+      sep = "-" * (10 * self.N) + "\n"
       ret += sep
       for row in self.world:
          ret += " "
          ret += " | ".join(cell.value.ljust(7) for cell in row) + f"\n{sep}"
       
       # Create a table of payoff matrix using tabulate
-      headers = [f"H{u.sub(i + 1)}" for i in range(len(self.payoff_matrix))]
-      row_labels = [f"S{u.sub(i + 1)}" for i in range(len(self.payoff_matrix))]
+      headers = [f"S{u.sub(i + 1)}" for i in range(len(self.payoff_matrix))]
+      row_labels = [f"H{u.sub(i + 1)}" for i in range(len(self.payoff_matrix))]
       table_data = [
          [row_labels[i]] + list(map(str, row)) for i, row in enumerate(self.payoff_matrix)
       ]
