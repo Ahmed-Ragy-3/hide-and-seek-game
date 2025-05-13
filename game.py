@@ -3,15 +3,14 @@ import random
 import util as u
 from tabulate import tabulate
 class Game():
-   def __init__(self, N, M=1, mode=u.MODE.INTERACTIVE, human_role=u.PLAYER.HIDER):
+   def __init__(self, N, M=1, turn=u.PLAYER.HIDER):
       assert N > 0, "N must be greater than 0"
       assert M > 0, "M must be greater than 0"
       self.N = N
       self.M = M
       
-      self.mode = mode
-      self.human_role = human_role
-      self.turn = human_role
+      # self.human_role = human_role
+      self.turn = turn
 
       # (hider, seeker)
       self.scores = (0, 0)
@@ -20,11 +19,10 @@ class Game():
       self.__initialize()
 
    def __initialize(self):
-      # world will be a 2D matrix of size M x N
       self.world = [[random.choice(list(u.PLACETYPE)) for _ in range(self.N)] for _ in range(self.M)]
-      # Hider's score matrix: rows = hider, cols = seeker
+      
       total_size = self.M * self.N
-      self.payoff_matrix = np.zeros((total_size, total_size)) 
+      self.payoff_matrix = np.zeros((total_size, total_size))
       for h in range(total_size):
          for s in range(total_size):
             rh, ch = self.__indices(h)
@@ -46,32 +44,15 @@ class Game():
             elif dis == 2:
                self.payoff_matrix[h][s] *= 0.75
             
-   def __distance(self, index1: int, index2: int) -> int:
-      """
-      Args:
-         index1 (int): index of the hider in payoff matrix
-         index2 (int): index of the seeker in payoff matrix
-      Returns:
-         int: distance between hider an seeker in the 2D world
-      """
-      # assert index1 != index2, "indices shouldn't be equal"
-      rh, ch = self.__indices(index1)
-      rs, cs = self.__indices(index2)
-
-      return abs(rs - rh) + abs(cs - ch)
-      # return max(diff_r, diff_c)
-
-
-   def play_round(self):
-      # Handle player actions and game logic
-      # if human_role == 'hider':
-      #    human_score = self.hider_score_matrix[human_move][computer_move]
-      #    computer_score = -human_score
-      # else:
-      #    human_score = -self.hider_score_matrix[computer_move][human_move]
-      #    computer_score = -human_score
-      # return human_score, computer_score
-      pass
+   def play_round(self, human_role, human_move, computer_move):
+      # Determine scores for human and computer based on roles and moves
+      if human_role == 'hider':
+         human_score = self.payoff_matrix[human_move][computer_move]
+         computer_score = -human_score
+      else:
+         human_score = -self.payoff_matrix[computer_move][human_move]
+         computer_score = -human_score
+      return human_score, computer_score
 
    def reset(self):
       """
@@ -86,10 +67,10 @@ class Game():
       assert turn in (u.PLAYER.HIDER, u.PLAYER.SEEKER), "Invalid player type"
       return u.PLAYER.HIDER if turn == u.PLAYER.SEEKER else u.PLAYER.SEEKER
 
-   def __rand_indices(self) -> tuple:
-      return random.randint(0, self.M - 1), random.randint(0, self.N - 1)
+   # def __rand_indices(self) -> tuple:
+   #    return random.randint(0, self.M - 1), random.randint(0, self.N - 1)
    
-   def get_matrix(self) -> np.ndarray:
+   def get_payoff_matrix(self) -> np.ndarray:
       return self.payoff_matrix
 
    def __indices(self, index: int) -> tuple:
@@ -98,8 +79,7 @@ class Game():
 
 
    def __str__(self) -> str:
-      ret = f"Game Mode: {self.mode.value}\n"
-      ret += f"Human Role: {self.human_role.value}\n"
+      ret = f"Human Role: {self.human_role.value}\n"
       
       ret += f"\nWorld: {self.M} x {self.N}\n"
       sep = "-" * (10 * self.N) + "\n"
