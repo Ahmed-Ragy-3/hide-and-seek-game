@@ -31,14 +31,14 @@ class Game():
       # Hider's score matrix: rows = hider, cols = seeker
       total_size = self.M * self.N
       self.payoff_matrix = np.zeros((total_size, total_size)) 
-      # for h in range(total_size):
-      #    for s in range(total_size):
-      #       place_type = self.world[s]  # The seeker determines the column
-      #       hider_score = self.type_scores[place_type][0]
-      #       if h == s:
-      #          self.payoff_matrix[h][s] = hider_score  # Exact match
-      #       else:
-      #          self.payoff_matrix[h][s] = self.__proximity_score(h, s, hider_score)
+      for h in range(total_size):
+         for s in range(total_size):
+            place_type = self.world[s]  # The seeker determines the column
+            hider_score = self.type_scores[place_type][0]
+            if h == s:
+               self.payoff_matrix[h][s] = hider_score  # Exact match
+            else:
+               self.payoff_matrix[h][s] = self.__proximity_score(h, s, hider_score)
 
    def __proximity_score(self, h, s, score):
       # Adjust score based on distance between hider and seeker
@@ -62,13 +62,18 @@ class Game():
       # return human_score, computer_score
       pass
 
-   def other(self, turn) -> u.PLAYER:
-      return u.HIDER if turn == u.SEEKER else u.SEEKER
+   def reset(self):
+      """
+      Reset the game state.
+      """
+      self.turn = self.human_role
+      self.scores = (0, 0)
+      self.rounds_won = (0, 0)
+      self.__initialize()
 
-   def __assign_scores__(self):
-      """
-      Assign a score to each place in the world for each player.
-      """
+   def other(self, turn) -> u.PLAYER:
+      assert turn in (u.HIDER, u.SEEKER), "Invalid player type"
+      return u.HIDER if turn == u.SEEKER else u.SEEKER
 
    def __rand_indices__(self) -> tuple:
       return random.randint(0, self.M - 1), random.randint(0, self.N - 1)
@@ -77,11 +82,13 @@ class Game():
       return self.payoff_matrix
 
    def indices(self, index: int) -> tuple:
+      assert 0 <= index < (self.M * self.N), "Index out of bounds"
       return index // self.N, index % self.N
 
    def __str__(self) -> str:
       ret = f"Game Mode: {self.mode.value}\n"
       ret += f"Human Role: {self.human_role.value}\n"
+      
       ret += f"\nWorld: {self.M} x {self.N}\n"
       sep = "-" * 50 + "\n"
       ret += sep
