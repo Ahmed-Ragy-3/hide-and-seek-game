@@ -1,85 +1,70 @@
-# 🎯 Hide and Seek Game — Operations Research Assignment
+# Getting Started with Create React App
 
-A Python-based interactive game that simulates a strategic **hide-and-seek** scenario using **game theory** and **linear programming**. Designed for **Operations Research** coursework at Alexandria University.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## 📌 Assignment Overview
+## Available Scripts
 
-This project implements a strategic game between a **Hider** and a **Seeker** on a linear world. It includes:
+In the project directory, you can run:
 
-- Mixed strategy generation using **Simplex (LP)**
-- Interactive **GUI** for playing
-- **Simulation mode** to run multiple rounds
-- **Bonus features** like proximity scoring
+### `npm start`
 
----
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-## 🚀 Getting Started
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-### Requirements
-- Python 3.7+
-- `scipy`
-- `numpy`
+### `npm test`
 
-Install dependencies:
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-```bash
-pip install numpy scipy
-```
+### `npm run build`
 
-### Run the Game
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-```bash
-python main.py
-```
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-This will launch the GUI where you can choose your role (Hider or Seeker) and play interactively.
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
----
+### `npm run eject`
 
-## 🎮 Game Description
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-* The world is a **linear set of N places**
-* Each place is either:
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-  * `hard`: Seeker has lower chance of success
-  * `neutral`: Equal scoring
-  * `easy`: Seeker has higher chance of success
-* The computer plays using an **optimal strategy** via Linear Programming (Simplex).
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
----
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## 🧠 Game Theory + LP
+## Learn More
 
-This project formulates the Hide & Seek game as a **zero-sum game**:
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-* Hider: Maximizes their minimum payoff
-* Seeker: Minimizes the Hider's payoff
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-We solve for the **optimal mixed strategy** using `scipy.optimize.linprog`.
+### Code Splitting
 
----
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-## 🖥️ Features
+### Analyzing the Bundle Size
 
-✅ Choose role (Hider or Seeker)
-✅ Randomly generated world types
-✅ Score matrix with proximity effect
-✅ Interactive GUI with scores and stats
-✅ Simulation mode (100 rounds)
-✅ Reset button
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-* ✅ **Proximity scoring**:
+### Making a Progressive Web App
 
-  * If the seeker is close, hider is penalized.
-* 🔜 **2D world mode** (to be implemented)
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
----
+### Advanced Configuration
 
-## 📊 Simulation Example
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-Run 100 random rounds using:
+### Deployment
 
-```python
-from simulation import run_simulation
-run_simulation(N=4, role='hider', rounds=100)
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

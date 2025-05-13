@@ -1,0 +1,51 @@
+:root {
+  --primary-color: #8ab4f8;
+  --secondary-color: #81c995;
+  --accent-color: #f28b82;
+  --background-color: #202124;
+  --text-color: #e8eaed;
+  --border-color: #5f6368;
+  --cell-bg: #303134;
+  --positive: #81c995;
+  --negative: #f28b82;
+}
+
+body.dark {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+body.dark .game-controls,
+body.dark .game-board-linear,
+body.dark .game-board-2d,
+body.dark .game-info,
+body.dark .game-matrix,
+body.dark .probability-chart,
+body.dark .results-table {
+  background-color: var(--cell-bg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .cell {
+  background-color: #424242;
+  border-color: var(--border-color);
+}
+
+body.dark table th {
+  background-color: var(--primary-color);
+  color: #202124;
+}
+
+body.dark table td {
+  border-color: var(--border-color);
+}
+
+body.dark .button-group button {
+  background-color: #424242;
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+body.dark .matrix-legend {
+  color: #9aa0a6;
+}

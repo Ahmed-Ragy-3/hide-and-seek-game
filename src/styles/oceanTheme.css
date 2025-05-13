@@ -1,0 +1,64 @@
+:root {
+  --primary-color: #4285f4;
+  --secondary-color: #34a853;
+  --accent-color: #ea4335;
+  --background-color: #e6f7ff;
+  --text-color: #0066cc;
+  --border-color: #99ccff;
+  --cell-bg: #cce6ff;
+  --positive: #00cc99;
+  --negative: #ff6666;
+}
+
+body.ocean {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+body.ocean .game-controls,
+body.ocean .game-board-linear,
+body.ocean .game-board-2d,
+body.ocean .game-info,
+body.ocean .game-matrix,
+body.ocean .probability-chart,
+body.ocean .results-table {
+  background-color: var(--cell-bg);
+  box-shadow: 0 2px 4px rgba(0, 102, 204, 0.2);
+}
+
+body.ocean .cell {
+  background-color: #e6f7ff;
+  border-color: var(--border-color);
+}
+
+body.ocean table th {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+body.ocean .button-group button {
+  background-color: #e6f7ff;
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+body.ocean .button-group button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+body.ocean .reset-button {
+  background-color: var(--accent-color);
+}
+
+body.ocean .cell.hard {
+  border-color: var(--negative);
+}
+
+body.ocean .cell.easy {
+  border-color: var(--positive);
+}
+
+body.ocean .cell.neutral {
+  border-color: var(--primary-color);
+}
