@@ -1,0 +1,64 @@
+:root {
+  --primary-color: #2e7d32;
+  --secondary-color: #689f38;
+  --accent-color: #d84315;
+  --background-color: #f1f8e9;
+  --text-color: #33691e;
+  --border-color: #aed581;
+  --cell-bg: #dcedc8;
+  --positive: #689f38;
+  --negative: #d84315;
+}
+
+body.forest {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+body.forest .game-controls,
+body.forest .game-board-linear,
+body.forest .game-board-2d,
+body.forest .game-info,
+body.forest .game-matrix,
+body.forest .probability-chart,
+body.forest .results-table {
+  background-color: var(--cell-bg);
+  box-shadow: 0 2px 4px rgba(46, 125, 50, 0.2);
+}
+
+body.forest .cell {
+  background-color: #f1f8e9;
+  border-color: var(--border-color);
+}
+
+body.forest table th {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+body.forest .button-group button {
+  background-color: #f1f8e9;
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+body.forest .button-group button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+body.forest .reset-button {
+  background-color: var(--accent-color);
+}
+
+body.forest .cell.hard {
+  border-color: var(--negative);
+}
+
+body.forest .cell.easy {
+  border-color: var(--positive);
+}
+
+body.forest .cell.neutral {
+  border-color: var(--primary-color);
+}
