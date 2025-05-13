@@ -34,7 +34,7 @@ class Game():
             
             self.payoff_matrix[h][s] = hider_score if h != s else -seeker_score
             # to prevent floats
-            self.payoff_matrix[h][s] *= 4
+            # self.payoff_matrix[h][s] *= 4
             
             # proximity_score
             dis = abs(rs - rh) + abs(cs - ch)
@@ -79,9 +79,9 @@ class Game():
 
 
    def __str__(self) -> str:
-      ret = f"Human Role: {self.human_role.value}\n"
+      # ret = f"Human Role: {self.human_role.value}\n"
       
-      ret += f"\nWorld: {self.M} x {self.N}\n"
+      ret = f"\nWorld: {self.M} x {self.N}\n"
       sep = "-" * (10 * self.N) + "\n"
       ret += sep
       for row in self.world:
