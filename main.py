@@ -1,15 +1,20 @@
+import util as u
 from game import Game
-from simulation import simulate
+from play import simulate, play
 
 def main():
    # Initialize the game with parameters N and M
    M = 1  # Example value for M
-   N = 5  # Example value for N
+   N = 4  # Example value for N
    game = Game(N, M)
-   # run_simulation(N, 'hider', rounds=20)
 
    # Print the game object
+   play(game, u.PLAYER.HIDER)
+   play(game, u.PLAYER.SEEKER)
    print(game)
+
+   res = simulate(game, rounds=20)
+   print(res)
 
 if __name__ == "__main__":
    main()

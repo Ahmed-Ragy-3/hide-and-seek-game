@@ -4,19 +4,20 @@ import util as u
 import lp_solver as lp
 from tabulate import tabulate
 class Game():
-   def __init__(self, N, M=1, computer_role=u.PLAYER.HIDER):
+   def __init__(self, N, M=1):
       assert N > 0, "N must be greater than 0"
       assert M > 0, "M must be greater than 0"
       self.N = N
       self.M = M
 
-      self.computer_role = computer_role
+      # self.computer_role = computer_role
       # (hider, seeker)
       # self.scores = (0, 0)
       # self.rounds_won = (0, 0)
 
       self.__initialize()
-      # self.__solve_probabilities()
+      self.hider_probabilities = None
+      self.seeker_probabilities = None
 
    def __initialize(self):
       self.world = [[random.choice(list(u.PLACETYPE)) for _ in range(self.N)] for _ in range(self.M)]
@@ -46,25 +47,34 @@ class Game():
             
             elif dis == 3:
                self.payoff_matrix[h][s] *= 0.25
-            
-   def __solve_probabilities(self):
-      # Solve for the optimal mixed strategy for the hider (maximize minimum gain)
-      self.probabilities = lp.solve_hider_strategy(self.payoff_matrix) if self.computer_role == u.PLAYER.HIDER \
-                      else lp.solve_seeker_strategy(self.payoff_matrix)
-
-      assert len(self.probabilities) == (self.M * self.N), "Probabilities length mismatch"
-      assert np.isclose(sum(self.probabilities), 1.0), "Probabilities do not sum to 1"
-      assert all(0 <= p <= 1 for p in self.probabilities), "Probabilities out of bounds"
 
 
-   def play_round(self) -> tuple:
+   def play_round(self, player: u.PLAYER) -> tuple:
       """
+      Determines the move (row, col) for the given player using their optimal mixed strategy.
+
       Returns:
-          int, int: indices of which the computer should play
+         tuple: (row, col) index chosen based on strategy probabilities
       """
-      index = np.random.choice(len(self.probabilities), p=self.probabilities)
-      row, col = self.__indices(index)
-      return row, col
+      assert player in (u.PLAYER.HIDER, u.PLAYER.SEEKER), "Invalid player type"
+
+      if player == u.PLAYER.HIDER:
+         if self.hider_probabilities is None:
+            self.hider_probabilities = lp.solve_hider_strategy(self.payoff_matrix)
+         probs = self.hider_probabilities
+
+      else:  # player == u.PLAYER.SEEKER
+         if self.seeker_probabilities is None:
+            self.seeker_probabilities = lp.solve_hider_strategy(self.payoff_matrix)
+         probs = self.seeker_probabilities
+
+      assert len(probs) == self.M * self.N, f"Expected {self.M * self.N} probabilities, got {len(probs)}"
+      assert np.isclose(sum(probs), 1.0), f"Probabilities do not sum to 1: {probs}"
+      assert all(0 <= p <= 1 for p in probs), f"Probabilities out of bounds: {probs}"
+
+      index = np.random.choice(len(probs), p=probs)
+      return self.__indices(index)
+
    
    def reset(self):
       """
@@ -73,11 +83,10 @@ class Game():
       # self.scores = (0, 0)
       # self.rounds_won = (0, 0)
       self.__initialize()
-      self.__solve_probabilities()
 
-   # def other(self, turn) -> u.PLAYER:
-   #    assert turn in (u.PLAYER.HIDER, u.PLAYER.SEEKER), "Invalid player type"
-   #    return u.PLAYER.HIDER if turn == u.PLAYER.SEEKER else u.PLAYER.SEEKER
+   def other(self, turn) -> u.PLAYER:
+      assert turn in (u.PLAYER.HIDER, u.PLAYER.SEEKER), "Invalid player type"
+      return u.PLAYER.HIDER if turn == u.PLAYER.SEEKER else u.PLAYER.SEEKER
 
    def get_payoff_matrix(self) -> np.ndarray:
       return self.payoff_matrix
@@ -90,7 +99,7 @@ class Game():
       return index // self.N, index % self.N
 
    def __str__(self) -> str:
-      ret = f"Computer Role: {self.computer_role.value}\n"
+      # ret = f"Computer Role: {self.computer_role.value}\n"
       
       ret = f"\nWorld: {self.M} x {self.N}\n"
       sep = "-" * (10 * self.N) + "\n"
@@ -110,8 +119,11 @@ class Game():
       ret += f"\nPayoff Matrix: {len(self.payoff_matrix)} x {len(self.payoff_matrix)}\n"
       ret += tabulate(table_data, headers=[""] + headers, tablefmt="grid")
 
-      # ret += f"\n\nProbabilities of {self.computer_role.value}:\n"
-      # ret += f"{self.probabilities[:len(self.probabilities)]}\n"
+      ret += f"\n\nProbabilities of hider:\n"
+      ret += f"{self.hider_probabilities[:len(self.hider_probabilities)]}\n"
+
+      ret += f"\n\nProbabilities of seeker:\n"
+      ret += f"{self.seeker_probabilities[:len(self.seeker_probabilities)]}\n"
 
       # ret += f"\n\nScores:\n"
       # # ret += f"Hider: {self.scores[0]}, Seeker: {self.scores[1]}\n"
