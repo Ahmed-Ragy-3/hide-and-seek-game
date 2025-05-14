@@ -1,5 +1,5 @@
 from game import Game
-from simulation import run_simulation
+from simulation import simulate
 
 def main():
    # Initialize the game with parameters N and M
