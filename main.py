@@ -13,8 +13,8 @@ def main():
    play(game, u.PLAYER.SEEKER)
    print(game)
 
-   res = simulate(game, rounds=20)
-   print(res)
+   # res = simulate(game, rounds=20)
+   # print(res)
 
 if __name__ == "__main__":
    main()

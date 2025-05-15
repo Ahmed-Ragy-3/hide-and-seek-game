@@ -18,6 +18,12 @@ class Game():
       self.__initialize()
       self.hider_probabilities = None
       self.seeker_probabilities = None
+      self.payoff_matrix = np.array([
+         [-1, 0.5, 1, 1],
+         [2, -1, 2, 2],
+         [1, 0.5, -2, 1],
+         [0.75, 2, 0.5, -1]
+      ])
 
    def __initialize(self):
       self.world = [[random.choice(list(u.PLACETYPE)) for _ in range(self.N)] for _ in range(self.M)]
@@ -65,7 +71,7 @@ class Game():
 
       else:  # player == u.PLAYER.SEEKER
          if self.seeker_probabilities is None:
-            self.seeker_probabilities = lp.solve_hider_strategy(self.payoff_matrix)
+            self.seeker_probabilities = lp.solve_seeker_strategy(self.payoff_matrix)
          probs = self.seeker_probabilities
 
       assert len(probs) == self.M * self.N, f"Expected {self.M * self.N} probabilities, got {len(probs)}"
@@ -119,11 +125,13 @@ class Game():
       ret += f"\nPayoff Matrix: {len(self.payoff_matrix)} x {len(self.payoff_matrix)}\n"
       ret += tabulate(table_data, headers=[""] + headers, tablefmt="grid")
 
-      ret += f"\n\nProbabilities of hider:\n"
-      ret += f"{self.hider_probabilities[:len(self.hider_probabilities)]}\n"
+      if self.hider_probabilities is not None:
+         ret += f"\n\nProbabilities of hider:\n"
+         ret += f"{self.hider_probabilities[:len(self.hider_probabilities)]}\n"
 
-      ret += f"\n\nProbabilities of seeker:\n"
-      ret += f"{self.seeker_probabilities[:len(self.seeker_probabilities)]}\n"
+      if self.seeker_probabilities is not None:
+         ret += f"\n\nProbabilities of seeker:\n"
+         ret += f"{self.seeker_probabilities[:len(self.seeker_probabilities)]}\n"
 
       # ret += f"\n\nScores:\n"
       # # ret += f"Hider: {self.scores[0]}, Seeker: {self.scores[1]}\n"
