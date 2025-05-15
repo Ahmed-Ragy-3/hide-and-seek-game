@@ -10,7 +10,6 @@ class Game():
       self.N = N
       self.M = M
 
-      # self.computer_role = computer_role
       # (hider, seeker)
       # self.scores = (0, 0)
       # self.rounds_won = (0, 0)
@@ -18,13 +17,13 @@ class Game():
       self.__initialize()
       self.hider_probabilities = None
       self.seeker_probabilities = None
-      self.payoff_matrix = np.array([
-         [-1, 0.5, 1, 1],
-         [2, -1, 2, 2],
-         [1, 0.5, -2, 1],
-         [0.75, 2, 0.5, -1]
-      ])
-
+      # self.payoff_matrix = np.array([
+      #    [-1, 0.5, 1, 1],
+      #    [2, -1, 2, 2],
+      #    [1, 0.5, -2, 1],
+      #    [0.75, 2, 0.5, -1]
+      # ])
+  
    def __initialize(self):
       self.world = [[random.choice(list(u.PLACETYPE)) for _ in range(self.N)] for _ in range(self.M)]
       
@@ -41,7 +40,7 @@ class Game():
             
             self.payoff_matrix[h][s] = hider_score if h != s else -seeker_score
             # to prevent floats
-            # self.payoff_matrix[h][s] *= 4
+            self.payoff_matrix[h][s] *= 4
             
             # proximity_score
             dis = abs(rs - rh) + abs(cs - ch)
@@ -105,21 +104,18 @@ class Game():
       return index // self.N, index % self.N
 
    def __str__(self) -> str:
-      # ret = f"Computer Role: {self.computer_role.value}\n"
-      
       ret = f"\nWorld: {self.M} x {self.N}\n"
       sep = "-" * (10 * self.N) + "\n"
       ret += sep
       for row in self.world:
          ret += " "
-         ret += " | ".join(cell.value.ljust(7) for cell in row) + f"\n{sep}"
+         ret += " , ".join(cell.value.ljust(7) for cell in row) + f"\n{sep}"
       
       # Create a table of payoff matrix using tabulate
       headers = [f"S{u.sub(i + 1)}" for i in range(len(self.payoff_matrix))]
       row_labels = [f"H{u.sub(i + 1)}" for i in range(len(self.payoff_matrix))]
       table_data = [
          [row_labels[i]] + list(map(str, row)) for i, row in enumerate(self.payoff_matrix)
-         # [p for p in self.probabilities]
       ]
       
       ret += f"\nPayoff Matrix: {len(self.payoff_matrix)} x {len(self.payoff_matrix)}\n"
@@ -137,6 +133,5 @@ class Game():
       # # ret += f"Hider: {self.scores[0]}, Seeker: {self.scores[1]}\n"
       # ret += f"\nRounds Won: {self.rounds_won}\n"
       # # ret += f"Hider: {self.rounds_won[0]}, Seeker: {self.rounds_won[1]}\n"
-      # ret += f"\nCurrent Turn: {self.turn.value}\n"
       
       return ret
