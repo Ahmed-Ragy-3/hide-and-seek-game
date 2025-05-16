@@ -4,7 +4,7 @@ from play import simulate, play
 
 def main():
    # Initialize the game with parameters N and M
-   M = 1  # Example value for M
+   M = 4  # Example value for M
    N = 4  # Example value for N
    game = Game(N, M)
 

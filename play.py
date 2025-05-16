@@ -13,7 +13,7 @@ def play(game: Game, player: u.PLAYER):
        row, col: location of the optimal move to be played
    """
    # Play a round of the game
-   return game.play_round(player)
+   return game.play_optimal(player)
 
 def simulate(game: Game, rounds=100, start_turn=u.PLAYER.HIDER):
    """
@@ -24,7 +24,7 @@ def simulate(game: Game, rounds=100, start_turn=u.PLAYER.HIDER):
    results = []
    turn = start_turn
    for _ in range(rounds):
-      player1_move, player2_move = game.play_round(player=turn)
+      player1_move, player2_move = game.play_optimal(player=turn)
       results.append((player1_move, player2_move))
       turn = game.other(turn)
    return results
