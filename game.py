@@ -4,11 +4,22 @@ import util as u
 import lp_solver as lp
 from tabulate import tabulate
 
+# [["H","E","E","H"],
+#  ["N","N","N","N"],
+#  ["N","H","E","E"],
+#  ["E","H","H","N"]]
+
 # test_world = [
 #    [u.PLACETYPE.HARD, u.PLACETYPE.EASY, u.PLACETYPE.EASY, u.PLACETYPE.HARD],
 #    [u.PLACETYPE.NEUTRAL, u.PLACETYPE.NEUTRAL, u.PLACETYPE.NEUTRAL, u.PLACETYPE.NEUTRAL],
 #    [u.PLACETYPE.NEUTRAL, u.PLACETYPE.HARD, u.PLACETYPE.EASY, u.PLACETYPE.EASY],
 #    [u.PLACETYPE.EASY, u.PLACETYPE.HARD, u.PLACETYPE.HARD, u.PLACETYPE.NEUTRAL]
+
+#    # [u.PLACETYPE.HARD, u.PLACETYPE.EASY, u.PLACETYPE.EASY],
+#    # [u.PLACETYPE.NEUTRAL, u.PLACETYPE.NEUTRAL, u.PLACETYPE.NEUTRAL],
+#    # [u.PLACETYPE.NEUTRAL, u.PLACETYPE.HARD, u.PLACETYPE.EASY]
+
+#    # [u.PLACETYPE.EASY, u.PLACETYPE.HARD, u.PLACETYPE.HARD]
 # ]
 
 class Game():
@@ -23,7 +34,6 @@ class Game():
 
    def __initialize(self):
       self.world = [[random.choice(list(u.PLACETYPE)) for _ in range(self.N)] for _ in range(self.M)]
-      # self.world = np.array(test_world)
       
       total_size = self.M * self.N
       self.payoff_matrix = np.zeros((total_size, total_size))
@@ -39,7 +49,7 @@ class Game():
             self.payoff_matrix[h][s] = hider_score if h != s else -seeker_score
             # to prevent floats
             self.payoff_matrix[h][s] *= 4
-            
+
             # proximity_score
             dis = abs(rs - rh) + abs(cs - ch)
             if dis == 1:
@@ -97,6 +107,7 @@ class Game():
       Reset the game state.
       """
       self.__initialize()
+      self.__solve_probabilties()
 
    def other(self, turn) -> u.PLAYER:
       assert turn in (u.PLAYER.HIDER, u.PLAYER.SEEKER), "Invalid player type"

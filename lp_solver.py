@@ -38,33 +38,38 @@ from scipy.optimize import linprog
    H2  2 -1  2  2    x₂
    H3  1  1 -3  1    x₃
    H4  2  2  2 -1    x₄
-       y1 y2 y3 y4
+       y₁ y₂ y₃ y₄
    
    max z = v:
-      -1 x₁ + 2x₂ +  x₃ + 2x₄ <= v
-       1 x₁ -  x₂ +  x₃ + 2x₄ <= v
-       1 x₁ + 2x₂ - 3x₃ + 2x₄ <= v
-       1 x₁ + 2x₂ +  x₃ -  x₄ <= v
+      -1 x₁ + 2x₂ +  x₃ + 2x₄ >= v
+       1 x₁ -  x₂ +  x₃ + 2x₄ >= v
+       1 x₁ + 2x₂ - 3x₃ + 2x₄ >= v
+       1 x₁ + 2x₂ +  x₃ -  x₄ >= v
    
                ↓
                ↓ dual
                ↓
 
    min z = w:
-      -1 y₁ + 1y₂ + 1y₃ + 1y₄ >= w
-       2 y₁ - 1y₂ + 2y₃ + 2y₄ >= w
-       1 y₁ + 1y₂ - 3y₃ + 1y₄ >= w
-       2 y₁ + 2y₂ + 2y₃ - 1y₄ >= w
+      -1 y₁ + 1y₂ + 1y₃ + 1y₄ <= w
+       2 y₁ - 1y₂ + 2y₃ + 2y₄ <= w
+       1 y₁ + 1y₂ - 3y₃ + 1y₄ <= w
+       2 y₁ + 2y₂ + 2y₃ - 1y₄ <= w
+
+      -1 y₁ + 1y₂ + 1y₃ + 1y₄ - w <= 0
+       2 y₁ - 1y₂ + 2y₃ + 2y₄ - w <= 0
+       1 y₁ + 1y₂ - 3y₃ + 1y₄ - w <= 0
+       2 y₁ + 2y₂ + 2y₃ - 1y₄ - w <= 0
        
                   ↓
                   ↓ eqn's * -1
                   ↓
  
       z = 0 y₁ + 0 y₂ + 0 y₃ + 0 y₄ + 1 w
-         y₁ -  y₂ -  y₃ -  y₄ <= -w
-      -2 y₁ +  y₂ - 2y₃ - 2y₄ <= -w
-       - y₁ -  y₂ + 3y₃ -  y₄ <= -w
-      -2 y₁ - 2y₂ - 2y₃ +  y₄ <= -w
+         y₁ -  y₂ -  y₃ -  y₄ - w <= 0
+      -2 y₁ +  y₂ - 2y₃ - 2y₄ - w <= 0
+       - y₁ -  y₂ + 3y₃ -  y₄ - w <= 0
+      -2 y₁ - 2y₂ - 2y₃ +  y₄ - w <= 0
 
                   ↓
                   ↓
@@ -85,21 +90,27 @@ from scipy.optimize import linprog
 #     1 x₁ + 2x₂ - 3x₃ + 2x₄ >= v
 #     1 x₁ + 2x₂ +  x₃ -  x₄ >= v
 
+#    -1 x₁ + 2x₂ +  x₃ + 2x₄ + v <= 0
+#     1 x₁ -  x₂ +  x₃ + 2x₄ + v <= 0
+#     1 x₁ + 2x₂ - 3x₃ + 2x₄ + v <= 0
+#     1 x₁ + 2x₂ +  x₃ -  x₄ + v <= 0
+
 # METHOD = 'simplex'
 METHOD = 'highs'
 
-def solve(contraints: np.ndarray) -> np.ndarray:
+def solve(contraints: np.ndarray, primal=True) -> np.ndarray:
+   print("Primal" if primal else "Dual")
    # get probabilities x₁, x₂, ............
    # Solve for the optimal mixed strategy for the hider (maximize minimum gain)
    num_strategies = contraints.shape[0]   # number of probabilities (strategies) to play
    
    # Objective: maximize v (converted to minimize -sum)
-   c = [0] * num_strategies + [-1]   # last element is the variable v
+   c = [0] * num_strategies + [-1 if primal else 1]   # last element is the variable v
 
    # Constraints: A_ub * x <= b_ub
-   A_ub = np.hstack((contraints, np.ones((num_strategies, 1))))
+   A_ub = np.hstack((contraints, (1 if primal else -1) * np.ones((num_strategies, 1))))
    b_ub = [0] * num_strategies
-   # print(A_ub)
+   print(A_ub)
 
    # Sum of probabilities must equal 1
    A_eq = [[1] * num_strategies + [0]]   # last element is the variable v
@@ -119,9 +130,9 @@ def solve(contraints: np.ndarray) -> np.ndarray:
       raise ValueError("Linear program failed to solve.")
 
 
-def solve_hider_strategy(payoff_matrix) -> np.ndarray:
-   return solve(-payoff_matrix.T)
+def solve_hider_strategy(payoff_matrix: np.ndarray) -> np.ndarray:
+   return solve(-payoff_matrix.T, primal=True)
 
-def solve_seeker_strategy(payoff_matrix) -> np.ndarray:
+def solve_seeker_strategy(payoff_matrix: np.ndarray) -> np.ndarray:
    # Solve for seeker strategy by negating the payoff matrix (zero-sum game dual)
-   return solve(-payoff_matrix)
+   return solve(payoff_matrix, primal=False)
