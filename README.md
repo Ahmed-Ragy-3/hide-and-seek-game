@@ -1,85 +1,12 @@
-# 🎯 Hide and Seek Game — Operations Research Assignment
+# React + Vite
 
-A Python-based interactive game that simulates a strategic **hide-and-seek** scenario using **game theory** and **linear programming**. Designed for **Operations Research** coursework at Alexandria University.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 📌 Assignment Overview
+Currently, two official plugins are available:
 
-This project implements a strategic game between a **Hider** and a **Seeker** on a linear world. It includes:
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-- Mixed strategy generation using **Simplex (LP)**
-- Interactive **GUI** for playing
-- **Simulation mode** to run multiple rounds
-- **Bonus features** like proximity scoring
+## Expanding the ESLint configuration
 
----
-
-## 🚀 Getting Started
-
-### Requirements
-- Python 3.7+
-- `scipy`
-- `numpy`
-
-Install dependencies:
-
-```bash
-pip install numpy scipy
-```
-
-### Run the Game
-
-```bash
-python main.py
-```
-
-This will launch the GUI where you can choose your role (Hider or Seeker) and play interactively.
-
----
-
-## 🎮 Game Description
-
-* The world is a **linear set of N places**
-* Each place is either:
-
-  * `hard`: Seeker has lower chance of success
-  * `neutral`: Equal scoring
-  * `easy`: Seeker has higher chance of success
-* The computer plays using an **optimal strategy** via Linear Programming (Simplex).
-
----
-
-## 🧠 Game Theory + LP
-
-This project formulates the Hide & Seek game as a **zero-sum game**:
-
-* Hider: Maximizes their minimum payoff
-* Seeker: Minimizes the Hider's payoff
-
-We solve for the **optimal mixed strategy** using `scipy.optimize.linprog`.
-
----
-
-## 🖥️ Features
-
-✅ Choose role (Hider or Seeker)
-✅ Randomly generated world types
-✅ Score matrix with proximity effect
-✅ Interactive GUI with scores and stats
-✅ Simulation mode (100 rounds)
-✅ Reset button
-
-* ✅ **Proximity scoring**:
-
-  * If the seeker is close, hider is penalized.
-* 🔜 **2D world mode** (to be implemented)
-
----
-
-## 📊 Simulation Example
-
-Run 100 random rounds using:
-
-```python
-from simulation import run_simulation
-run_simulation(N=4, role='hider', rounds=100)
-```
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

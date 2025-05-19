@@ -1,0 +1,106 @@
+/* PayoffModal.module.css */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999; /* Extremely high z-index */
+  backdrop-filter: blur(5px);
+}
+
+.modalContent {
+  background: rgba(39, 39, 39, 0.85);
+  color: #b8b8b8; /* Cyan text to match your cyberpunk theme */
+  padding: 30px;
+  border: 2px solid #15ff00; /* Yellow border to match your score section */
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 0 20px #15ff00, inset 0 0 20px rgba(255, 251, 0, 0.1); /* Yellow glow matching your theme */
+  animation: fadeIn 0.3s ease-in-out;
+  text-align: center;
+  position: relative; /* For absolute positioning of elements inside */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalContent h2 {
+  color: #15ff00; /* Yellow heading to match your score labels */
+  text-shadow: 0 0 10px rgba(255, 251, 0, 0.7);
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.modalContent h2:first-child {
+  margin-top: 0;
+}
+
+.table {
+  width: auto; 
+  max-width: 100%; 
+  margin-left: auto;
+  margin-right: auto;
+  table-layout: auto;
+}
+.table td {
+  border: 1px solid #15ff00;
+  padding: 10px;
+  color: rgb(255, 255, 255);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.probList {
+  margin-bottom: 20px;
+  font-size: 15px;
+  text-align: left;
+  background: rgba(29, 109, 11, 0.2);
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #15ff00;
+}
+
+.probList div {
+  margin: 8px 0;
+  color: #ffffff;
+}
+
+.closeButton {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  background: linear-gradient(to right, #ff0000, #cc6161);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.closeButton:hover {
+  background: linear-gradient(to right, #ff0000, #ff0000);
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(255, 0, 217, 0.8);
+}

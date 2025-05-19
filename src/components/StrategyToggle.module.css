@@ -1,0 +1,52 @@
+.toggleWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.toggle {
+  display: flex;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid #d9ff00;
+  border-radius: 30px;
+  overflow: hidden;
+  width: 250px;
+  height: 40px;
+}
+
+.option {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-weight: bold;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.option input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: linear-gradient(to right, #0dd1d1, #dcd927);
+  border-radius: 30px;
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+.left {
+  transform: translateX(0%);
+}
+
+.right {
+  transform: translateX(100%);
+}
