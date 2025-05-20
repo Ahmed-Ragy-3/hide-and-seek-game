@@ -13,28 +13,27 @@ current_player: u.PLAYER = None
 
 @app.route('/game', methods=['POST'])
 def create_game():
-   global game, current_player
-   game =None
-   current_player= None
-   data = request.get_json()
-   N = data.get('N')
-   M = data.get('M', 1)
-   role = data.get('role', 'hider').lower()
-   
+    global game, current_player
+    game = None
+    current_player = None
+    data = request.get_json()
+    N = data.get('N')
+    M = data.get('M', 1)
+    role = data.get('role', 'hider').lower()
 
-   if N is None or role not in ('hider', 'seeker'):
-      return jsonify({'error': 'Invalid input'}), 400
+    if N is None or role not in ('hider', 'seeker'):
+        return jsonify({'error': 'Invalid input'}), 400
 
-   current_player = u.PLAYER.HIDER if role == 'hider' else u.PLAYER.SEEKER
-   game = Game(N=N, M=M)
-   hider_prob , seeker_prob = game.get_probabilties()
+    current_player = u.PLAYER.HIDER if role == 'hider' else u.PLAYER.SEEKER
+    game = Game(N=N, M=M)
+    hider_prob, seeker_prob = game.get_probabilties()
 
-   return jsonify({
+    return jsonify({
         'message': f'Game created with {N} columns and role: {role}',
         'world': [[cell.value for cell in row] for row in game.world],
         'payoff_matrix': game.get_payoff_matrix().tolist(),
-        'hider_prob':hider_prob.tolist(),
-        'seeker_prob':seeker_prob.tolist(),
+        'hider_prob': hider_prob.tolist(),
+        'seeker_prob': seeker_prob.tolist(),
     })
 
 
@@ -60,20 +59,17 @@ def play_round():
         'move': move,
     })
 
+
 @app.route('/simulate', methods=['POST'])
 def simulate_game():
-   from backend.simulation import simulate  # Import your simulate logic
-   results = simulate(game, rounds=100, start_turn=current_player)
+    from backend.simulation import simulate  # Import your simulate logic
+    moves, scores, rounds_won = simulate(game, rounds=100, is_optimal=True)
 
-   return jsonify({
-      'rounds': len(results),
-      'results': results
-   })
-
-
-
-
-
+    return jsonify({
+        'moves': moves,
+        'scores': scores,
+        'rounds_won': rounds_won,
+    })
 
 if __name__ == '__main__':
-   app.run(debug=True)
+    app.run(debug=True)
