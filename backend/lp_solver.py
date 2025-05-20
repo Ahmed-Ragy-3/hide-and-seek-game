@@ -123,5 +123,4 @@ def solve_hider_strategy(payoff_matrix) -> np.ndarray:
    return solve(-payoff_matrix.T)
 
 def solve_seeker_strategy(payoff_matrix) -> np.ndarray:
-   # Solve for seeker strategy by negating the payoff matrix (zero-sum game dual)
    return solve(-payoff_matrix)

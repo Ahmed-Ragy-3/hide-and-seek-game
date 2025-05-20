@@ -4,13 +4,6 @@ import util as u
 import lp_solver as lp
 from tabulate import tabulate
 
-# test_world = [
-#    [u.PLACETYPE.HARD, u.PLACETYPE.EASY, u.PLACETYPE.EASY, u.PLACETYPE.HARD],
-#    [u.PLACETYPE.NEUTRAL, u.PLACETYPE.NEUTRAL, u.PLACETYPE.NEUTRAL, u.PLACETYPE.NEUTRAL],
-#    [u.PLACETYPE.NEUTRAL, u.PLACETYPE.HARD, u.PLACETYPE.EASY, u.PLACETYPE.EASY],
-#    [u.PLACETYPE.EASY, u.PLACETYPE.HARD, u.PLACETYPE.HARD, u.PLACETYPE.NEUTRAL]
-# ]
-
 class Game():
    def __init__(self, N, M=1):
       assert N > 0, "N must be greater than 0"
@@ -23,7 +16,6 @@ class Game():
 
    def __initialize(self):
       self.world = [[random.choice(list(u.PLACETYPE)) for _ in range(self.N)] for _ in range(self.M)]
-      # self.world = np.array(test_world)
       
       total_size = self.M * self.N
       self.payoff_matrix = np.zeros((total_size, total_size))

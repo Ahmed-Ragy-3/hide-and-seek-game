@@ -62,7 +62,7 @@ def play_round():
 
 @app.route('/simulate', methods=['POST'])
 def simulate_game():
-   from play import simulate  # Import your simulate logic
+   from backend.simulation import simulate  # Import your simulate logic
    results = simulate(game, rounds=100, start_turn=current_player)
 
    return jsonify({

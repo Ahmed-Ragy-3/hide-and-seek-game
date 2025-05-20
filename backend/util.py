@@ -26,32 +26,6 @@ class MODE(Enum):
    def __str__(self):
       return self.value
 
-class linear_iterator:
-   def __init__(self, matrix, get_indices=False):
-      self.matrix = matrix
-      self.M = len(matrix)
-      self.N = len(matrix[0]) if self.M > 0 else 0
-      self.total = self.M * self.N
-      self.index = 0
-      self.get_indices = get_indices
-
-   def __iter__(self):
-      return self
-
-   def __next__(self):
-      if self.index >= self.total:
-         raise StopIteration
-
-      row = self.index // self.N
-      col = self.index % self.N
-      value = self.matrix[row][col]
-      self.index += 1
-
-      if self.get_indices:
-         return row, col, value
-      else:
-         return value
-
 subscripts = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉']
 
 type_scores = {
