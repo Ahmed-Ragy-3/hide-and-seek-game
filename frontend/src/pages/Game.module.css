@@ -270,5 +270,32 @@ body {
 .backButton:hover {
   color: #000;
 }
+.strategyRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.simulationButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+    background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid #d9ff00;
+  border-radius: 30px;
+  color: white;
+  font-size: 15px;
+  padding: 6px 16px;
+  cursor: pointer;
+  height: 40px;
+  transition: background-color 0.3s;
+}
+
+.simulationButton:hover {
+background-color: rgba(0, 119, 255, 0.575);
+}
+
 
 

@@ -9,6 +9,7 @@ def simulate(game: Game, is_optimal=True, rounds=100):
    scores = [(0, 0)]
    rounds_won = [(0, 0)]
    payoff = game.get_payoff_matrix()
+   print(is_optimal)
 
    if is_optimal:
       play = game.play_optimal

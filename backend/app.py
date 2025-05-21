@@ -60,10 +60,17 @@ def play_round():
     })
 
 
+
 @app.route('/simulate', methods=['POST'])
 def simulate_game():
-    from backend.simulation import simulate  # Import your simulate logic
-    moves, scores, rounds_won = simulate(game, rounds=100, is_optimal=True)
+    from simulation import simulate  
+
+    if game is None:
+        return jsonify({'error': 'Game not initialized'}), 400
+
+    data = request.get_json()
+    is_optimal = data.get('is_optimal', True) 
+    moves, scores, rounds_won = simulate(game, rounds=100, is_optimal=is_optimal)
 
     return jsonify({
         'moves': moves,

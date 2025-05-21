@@ -12,6 +12,7 @@ import redImage from '../assets/red.png';
 import PayoffModal from '../components/PayoffModal';
 import StrategyToggle from '../components/StrategyToggle';
 import Catch from '../assets/catch.png';
+import SimulationResult from '../components/SimulationResult';
 
 export default function Game() {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ export default function Game() {
   const [flippedCards, setFlippedCards] = useState(new Set());
   const [userSelectedIndex, setUserSelectedIndex] = useState(null);
   const [serverSelectedIndex, setServerSelectedIndex] = useState(null);
+  const [simulationData, setSimulationData] = useState(null);
   // Convert to numbers
   const cols = parseInt(n, 10) || 1; // columns
   const rows = dimension === "2D" ? parseInt(m, 10) || 1 : 1; // rows
@@ -46,6 +48,26 @@ export default function Game() {
       gridRef.current.style.setProperty('--rows', rows);
     }
   }, [cols, rows]);
+
+const handleSimulation = async () => {
+  try {
+    const is_optimal = selectedStrategy === 'optimal';
+
+    const res = await fetch('http://localhost:5000/simulate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ is_optimal })
+    });
+
+    const data = await res.json();
+    setSimulationData(data);
+    alert("Simulation completed successfully!");
+  } catch (err) {
+    console.error('Simulation error:', err);
+    alert('Failed to run simulation.');
+  }
+};
+
 
 const handleReset = async () => {
   try {
@@ -139,6 +161,14 @@ const handleCardClick = async (index) => {
 
   return (
     <div className={styles.wrapper}>
+            {simulationData && (
+              <SimulationResult
+                moves={simulationData.moves}
+                scores={simulationData.scores}
+                roundsWon={simulationData.rounds_won}
+                onClose={() => setSimulationData(null)}
+              />
+            )}
                 {showModal && (
             <PayoffModal
               payoff={payoff}
@@ -184,7 +214,12 @@ const handleCardClick = async (index) => {
           >
             Show Data
           </button>
-          <StrategyToggle selected={selectedStrategy} onChange={setSelectedStrategy} />
+          <div className={styles.strategyRow}>
+            <StrategyToggle selected={selectedStrategy} onChange={setSelectedStrategy} />
+            <button className={styles.simulationButton} onClick={handleSimulation}>
+              Simulation 
+            </button>
+          </div>
         </div>
       </div>
 
@@ -243,7 +278,6 @@ backImage={
           </div>
         </div>
       </div>
-      
     </div>
   );
 }

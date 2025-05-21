@@ -83,7 +83,6 @@ const handleStart = async () => {
             >
             <option value="policeman">Policeman</option>
             <option value="thief">Thief</option>
-            <option value="simulation">Simulation Mode</option>
             </select>
         </div>
 
